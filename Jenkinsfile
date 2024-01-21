@@ -8,9 +8,10 @@ pipeline {
     stages {
         stage('Build and test architectures_and_design_patterns') {
             steps {
-                withGradle {
-                    sh 'cd ./architectures_and_design_patterns'
-                    sh './gradlew clean build test'
+                dir('architectures_and_design_patterns') {
+                    withGradle {
+                        sh './gradlew clean build test'
+                    }
                 }
             }
         }
