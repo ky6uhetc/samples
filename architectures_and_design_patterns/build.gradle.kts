@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.21"
+    id("jacoco")
 }
 
 group = "ru.futurio" // futurio.ru/architectures_and_design_patterns

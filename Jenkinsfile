@@ -12,6 +12,11 @@ pipeline {
                     withGradle {
                         sh './gradlew clean build test'
                     }
+                    jacoco(
+                        classPattern: '**/classes/kotlin/main',
+                        sourcePattern: '**/src/main/kotlin',
+                        sourceInclusionPattern: '**/*.kt'
+                    )
                 }
             }
         }
