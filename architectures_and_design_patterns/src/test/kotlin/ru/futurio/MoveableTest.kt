@@ -20,7 +20,7 @@ class MoveableTest {
     fun `can't move object with undefined position`() {
         val spaceShip = SpaceShip(position = null, velocity = Positioning(-7.0, 3.0))
         assertThrows<IllegalStateException> {  Move(spaceShip).execute() }.let { ex ->
-            assertEquals("Position is not defined", ex.message)
+            assertEquals("Can't move: position is not defined", ex.message)
         }
     }
 
@@ -28,7 +28,7 @@ class MoveableTest {
     fun `can't move object with undefined velocity`() {
         val spaceShip = SpaceShip(position = Positioning(12.0, 5.0), velocity = null)
         assertThrows<IllegalStateException> {  Move(spaceShip).execute() }.let { ex ->
-            assertEquals("Velocity is not defined", ex.message)
+            assertEquals("Can't move: velocity is not defined", ex.message)
         }
     }
 }

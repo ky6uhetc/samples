@@ -6,8 +6,8 @@ class Move(
     override val subject: Moveable
 ) : ActionCommand<Moveable> {
     override fun execute() {
-        subject.position = checkNotNull(subject.position) { "Position is not defined" }.add(
-            checkNotNull(subject.velocity) { "Velocity is not defined" }
+        subject.position = checkNotNull(subject.position) { "Can't move: position is not defined" }.add(
+            checkNotNull(subject.velocity) { "Can't move: velocity is not defined" }
         )
     }
 }
