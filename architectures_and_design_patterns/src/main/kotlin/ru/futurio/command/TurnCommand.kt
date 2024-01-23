@@ -5,7 +5,7 @@ import org.example.ru.futurio.model.Positioning
 import org.example.ru.futurio.model.Rotation
 import org.example.ru.futurio.model.Turnable
 
-class Turn(
+class TurnCommand(
     override val subject: Turnable,
     private val rotation: Rotation?
 ) : ActionCommand<Turnable> {

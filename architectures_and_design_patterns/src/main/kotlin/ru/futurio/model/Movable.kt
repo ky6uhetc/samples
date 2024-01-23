@@ -1,6 +1,6 @@
 package org.example.ru.futurio.model
 
-interface Moveable {
+interface Movable {
     var position: Positioning?
     val velocity: Positioning?
 }
