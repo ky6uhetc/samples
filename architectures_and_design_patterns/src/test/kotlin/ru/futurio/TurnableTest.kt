@@ -1,10 +1,10 @@
 package ru.futurio
 
-import org.example.ru.futurio.command.TurnCommand
-import org.example.ru.futurio.model.Axis.*
-import org.example.ru.futurio.model.Positioning
-import org.example.ru.futurio.model.Rotation
-import org.example.ru.futurio.model.impl.SpaceShip
+import ru.futurio.command.TurnCommand
+import ru.futurio.model.Axis.*
+import ru.futurio.model.Positioning
+import ru.futurio.model.Rotation
+import ru.futurio.model.impl.SpaceShip
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals

@@ -1,9 +1,9 @@
-package org.example.ru.futurio.command
+package ru.futurio.command
 
-import org.example.ru.futurio.model.Axis.*
-import org.example.ru.futurio.model.Positioning
-import org.example.ru.futurio.model.Rotation
-import org.example.ru.futurio.model.Turnable
+import ru.futurio.model.Axis.*
+import ru.futurio.model.Positioning
+import ru.futurio.model.Rotation
+import ru.futurio.model.Turnable
 
 class TurnCommand(
     override val subject: Turnable,

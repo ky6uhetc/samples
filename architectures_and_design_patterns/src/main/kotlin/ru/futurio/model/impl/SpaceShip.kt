@@ -1,8 +1,8 @@
-package org.example.ru.futurio.model.impl
+package ru.futurio.model.impl
 
-import org.example.ru.futurio.model.Movable
-import org.example.ru.futurio.model.Positioning
-import org.example.ru.futurio.model.Turnable
+import ru.futurio.model.Movable
+import ru.futurio.model.Positioning
+import ru.futurio.model.Turnable
 
 data class SpaceShip(
     override var position: Positioning?,

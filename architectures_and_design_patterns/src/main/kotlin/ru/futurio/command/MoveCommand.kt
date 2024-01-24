@@ -1,6 +1,6 @@
-package org.example.ru.futurio.command
+package ru.futurio.command
 
-import org.example.ru.futurio.model.Movable
+import ru.futurio.model.Movable
 
 class MoveCommand(
     override val subject: Movable

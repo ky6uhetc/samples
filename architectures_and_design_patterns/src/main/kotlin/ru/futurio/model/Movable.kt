@@ -1,4 +1,4 @@
-package org.example.ru.futurio.model
+package ru.futurio.model
 
 interface Movable {
     var position: Positioning?

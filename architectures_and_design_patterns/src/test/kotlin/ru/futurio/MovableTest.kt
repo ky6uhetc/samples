@@ -1,8 +1,8 @@
 package ru.futurio
 
-import org.example.ru.futurio.command.MoveCommand
-import org.example.ru.futurio.model.Positioning
-import org.example.ru.futurio.model.impl.SpaceShip
+import ru.futurio.command.MoveCommand
+import ru.futurio.model.Positioning
+import ru.futurio.model.impl.SpaceShip
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals

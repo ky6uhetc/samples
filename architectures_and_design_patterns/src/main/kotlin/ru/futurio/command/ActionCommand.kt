@@ -1,4 +1,4 @@
-package org.example.ru.futurio.command
+package ru.futurio.command
 
 interface ActionCommand<T> {
     val subject: T

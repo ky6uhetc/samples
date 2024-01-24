@@ -1,4 +1,4 @@
-package org.example.ru.futurio.model
+package ru.futurio.model
 
 interface Turnable {
     var velocity: Positioning?
