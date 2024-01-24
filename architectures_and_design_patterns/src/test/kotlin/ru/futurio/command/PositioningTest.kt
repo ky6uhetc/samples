@@ -1,6 +1,6 @@
-package ru.futurio
+package ru.futurio.command
 
-import org.example.ru.futurio.model.Positioning
+import ru.futurio.model.Positioning
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 

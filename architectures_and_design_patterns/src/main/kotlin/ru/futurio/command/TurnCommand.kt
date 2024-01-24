@@ -1,15 +1,17 @@
-package org.example.ru.futurio.command
+package ru.futurio.command
 
-import org.example.ru.futurio.model.Axis.*
-import org.example.ru.futurio.model.Positioning
-import org.example.ru.futurio.model.Rotation
-import org.example.ru.futurio.model.Turnable
+import ru.futurio.model.Axis.*
+import ru.futurio.model.Positioning
+import ru.futurio.model.Rotation
+import ru.futurio.model.ability.Movable
+import ru.futurio.util.MovementUtil.cos
+import ru.futurio.util.MovementUtil.sin
 
 class TurnCommand(
-    override val subject: Turnable,
+    override val subject: Movable,
     private val rotation: Rotation?
-) : ActionCommand<Turnable> {
-    override fun execute() {
+) : Command<Movable> {
+    override fun execute(context: CommandContext) {
         subject.velocity = checkNotNull(subject.velocity) {
             "Can't turn: velocity is not defined"
         }.let { v ->
@@ -33,10 +35,4 @@ class TurnCommand(
             }
         }
     }
-    
-    private fun cos(degrees: Double): Double = Math.cos(Math.toRadians(degrees)).round()
-    
-    private fun sin(degrees: Double): Double = Math.sin(Math.toRadians(degrees)).round()
-
-    private fun Double.round() = "%.15f".format(this).toDouble()
 }
