@@ -3,13 +3,13 @@ package ru.futurio.command
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import ru.futurio.model.Direction
-import ru.futurio.model.Positioning
-import ru.futurio.model.UObject
+import ru.futurio.model.*
 import ru.futurio.model.UObjectProperty.*
+import ru.futurio.model.ability.impl.MovableAdapter
 import ru.futurio.model.ability.impl.MovingAdapter
 import ru.futurio.model.manipulation.impl.MoveCommandEndableAdapter
 import java.util.concurrent.LinkedBlockingDeque
@@ -97,7 +97,7 @@ class StopMoveTest {
     }
 
     @Test
-    fun `stop move with missing missing`() {
+    fun `stop move with missing queue`() {
         val spaceShip = UObject(POSITION to Positioning(1.0, 2.0, 0.0)).also { objMap[it.id] = it }
         val commandQueue = LinkedBlockingDeque<Any>().also {
             it.add(MoveCommand(MovingAdapter(spaceShip)))
@@ -114,6 +114,29 @@ class StopMoveTest {
             StopMoveCommand(stopMoveOrder).execute(cmdCtx)
         }.let {
             assertEquals("Command queue is not defined for stop move command", it.message)
+        }
+        assertEquals(1, commandQueue.size)
+    }
+
+    @Test
+    fun `stop move with missing MoveCommand in queue`() {
+        val spaceShip1 = UObject(POSITION to Positioning(1.0, 2.0, 0.0)).also { objMap[it.id] = it }
+        val spaceShip2= UObject(POSITION to Positioning(1.0, 2.0, 0.0)).also { objMap[it.id] = it }
+        val commandQueue = LinkedBlockingDeque<Any>().also {
+            it.add(MoveCommand(MovingAdapter(spaceShip1)))
+            it.add(TurnCommand(MovableAdapter(spaceShip2), Rotation(90.0, Axis.Z)))
+        }
+        val stopMoveOrder = MoveCommandEndableAdapter(
+            UObject(
+                MANIPULATED_OBJECT_ID to spaceShip1.id,
+                MOVING_DIRECTION to Direction(30.0, 0.0),
+                VELOCITY_MODULUS to 10,
+                COMMAND_QUEUE to commandQueue
+            )
+        )
+
+        assertDoesNotThrow {
+            StopMoveCommand(stopMoveOrder).execute(cmdCtx)
         }
         assertEquals(1, commandQueue.size)
     }
