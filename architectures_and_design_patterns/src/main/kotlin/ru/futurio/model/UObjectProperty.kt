@@ -5,6 +5,7 @@ enum class UObjectProperty {
     MANIPULATED_OBJECT_ID,
     MOVING_DIRECTION,
     POSITION,
+    ROTATION,
     VELOCITY_VECTOR,
     VELOCITY_MODULUS
 }

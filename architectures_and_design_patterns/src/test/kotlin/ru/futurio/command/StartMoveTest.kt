@@ -63,6 +63,7 @@ class StartMoveTest {
             assertEquals("Manipulated object ID is not defined for start move command", it.message)
         }
         assertNull(MovingAdapter(spaceShip).velocity)
+        assertEquals(0, commandQueue.size)
     }
 
     @Test
@@ -80,6 +81,7 @@ class StartMoveTest {
         }.let {
             assertEquals("Manipulated object not found by ID", it.message)
         }
+        assertEquals(0, commandQueue.size)
     }
 
     @Test
@@ -98,6 +100,7 @@ class StartMoveTest {
             assertEquals("Start move direction is not defined", it.message)
         }
         assertNull(MovingAdapter(spaceShip).velocity)
+        assertEquals(0, commandQueue.size)
     }
 
     @Test
@@ -116,10 +119,11 @@ class StartMoveTest {
             assertEquals("Velocity modulus is not defined", it.message)
         }
         assertNull(MovingAdapter(spaceShip).velocity)
+        assertEquals(0, commandQueue.size)
     }
 
     @Test
-    fun `start move with missing missing`() {
+    fun `start move with missing queue`() {
         val commandQueue = LinkedBlockingDeque<Command<Any>>()
         val spaceShip = UObject(POSITION to Positioning(1.0, 2.0, 0.0)).also { objMap[it.id] = it }
         val startMoveOrder = UObject(
