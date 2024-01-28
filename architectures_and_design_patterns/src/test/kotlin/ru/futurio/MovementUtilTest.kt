@@ -1,6 +1,7 @@
-package ru.futurio.util
+package ru.futurio
 
 import org.junit.jupiter.api.Test
+import ru.futurio.util.MovementUtil
 import java.math.BigDecimal
 import java.math.RoundingMode.HALF_UP
 import kotlin.math.pow

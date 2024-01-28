@@ -1,10 +1,13 @@
-package ru.futurio.command
+package ru.futurio
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import ru.futurio.command.Command
+import ru.futurio.command.CommandContext
+import ru.futurio.command.StartMoveCommand
 import ru.futurio.model.Direction
 import ru.futurio.model.Positioning
 import ru.futurio.model.UObject

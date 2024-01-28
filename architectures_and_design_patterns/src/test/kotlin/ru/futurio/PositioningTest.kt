@@ -1,4 +1,4 @@
-package ru.futurio.command
+package ru.futurio
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import ru.futurio.model.Positioning

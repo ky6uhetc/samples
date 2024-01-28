@@ -1,7 +1,8 @@
-package ru.futurio.command
+package ru.futurio
 
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
+import ru.futurio.command.SetMovingCommand
 import ru.futurio.model.Positioning
 import ru.futurio.model.UObject
 import ru.futurio.model.UObjectProperty
