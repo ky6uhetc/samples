@@ -13,7 +13,7 @@ class RotateCommand(
 ) : Command<Movable> {
     override fun execute(context: CommandContext) {
         subject.velocity = checkNotNull(subject.velocity) {
-            "Can't turn: velocity is not defined"
+            "Can't rotate: velocity is not defined"
         }.let { v ->
             when (rotation?.axis) {
                 Z -> Positioning(
@@ -22,16 +22,16 @@ class RotateCommand(
                     z = v.z
                 )
                 Y -> Positioning(
-                    x = v.x * cos(rotation.angle) - v.z * sin(rotation.angle),
+                    x = v.x * cos(rotation.angle) + v.z * sin(rotation.angle),
                     y = v.y,
-                    z = v.x * sin(rotation.angle) + v.z * cos(rotation.angle)
+                    z = -v.x * sin(rotation.angle) + v.z * cos(rotation.angle)
                 )
                 X -> Positioning(
                     x = v.x,
-                    y = v.z * cos(rotation.angle) - v.z * sin(rotation.angle),
-                    z = v.z * sin(rotation.angle) + v.y * cos(rotation.angle)
+                    y = v.y * cos(rotation.angle) - v.z * sin(rotation.angle),
+                    z = v.y * sin(rotation.angle) + v.z * cos(rotation.angle)
                 )
-                else -> error("Can't turn: rotation is not defined")
+                else -> error("Can't rotate: rotation is not defined")
             }
         }
     }
