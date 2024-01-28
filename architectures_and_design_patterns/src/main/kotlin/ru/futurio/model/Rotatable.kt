@@ -1,5 +1,5 @@
 package ru.futurio.model
 
-interface Turnable {
+interface Rotatable {
     var velocity: Positioning?
 }

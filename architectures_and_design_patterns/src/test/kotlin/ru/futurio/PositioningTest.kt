@@ -1,8 +1,8 @@
 package ru.futurio
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import ru.futurio.model.Positioning
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 
 
 class PositioningTest {
