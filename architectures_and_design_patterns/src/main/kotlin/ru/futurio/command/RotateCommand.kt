@@ -7,7 +7,7 @@ import ru.futurio.model.ability.Movable
 import ru.futurio.util.MovementUtil.cos
 import ru.futurio.util.MovementUtil.sin
 
-class TurnCommand(
+class RotateCommand(
     override val subject: Movable,
     private val rotation: Rotation?
 ) : Command<Movable> {

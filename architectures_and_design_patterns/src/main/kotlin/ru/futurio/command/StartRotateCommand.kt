@@ -18,6 +18,6 @@ class StartRotateCommand(
         }
         checkNotNull(subject.commandQueue) {
             "Command queue is not defined for start rotate command"
-        }.add(TurnCommand(MovableAdapter(manipulatedObject), direction))
+        }.add(RotateCommand(MovableAdapter(manipulatedObject), direction))
     }
 }

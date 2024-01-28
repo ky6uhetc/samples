@@ -44,7 +44,7 @@ class StartRotateTest {
         assertEquals(Positioning(2.0, 0.0, 0.0), spaceShipMoving.velocity)
 
         assertEquals(1, commandQueue.size)
-        (commandQueue.pop() as TurnCommand).let {
+        (commandQueue.pop() as RotateCommand).let {
             assertEquals(spaceShip.id, it.subject.id)
             it.execute(cmdCtx)
         }

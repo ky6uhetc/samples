@@ -33,9 +33,9 @@ class MovableTest {
         val spaceShip = MovableAdapter(
             UObject(VELOCITY_VECTOR to Positioning(-3.0, 0.0))
         )
-        TurnCommand(spaceShip, Rotation(90.0, Z)).execute(cmdCtx)
+        RotateCommand(spaceShip, Rotation(90.0, Z)).execute(cmdCtx)
         assertEquals(Positioning(-0.0, -3.0), spaceShip.velocity)
-        TurnCommand(spaceShip, Rotation(60.0, Z)).execute(cmdCtx)
+        RotateCommand(spaceShip, Rotation(60.0, Z)).execute(cmdCtx)
         assertEquals(Positioning(2.5980762, -1.5), spaceShip.velocity)
     }
 
@@ -44,12 +44,12 @@ class MovableTest {
         val spaceShip1 = MovableAdapter(
             UObject(VELOCITY_VECTOR to Positioning(-3.0, 0.0))
         )
-        TurnCommand(spaceShip1, Rotation(30.0, Y)).execute(cmdCtx)
+        RotateCommand(spaceShip1, Rotation(30.0, Y)).execute(cmdCtx)
         assertEquals(Positioning(-2.5980762, 0.0, -1.5), spaceShip1.velocity)
         val spaceShip2 = MovableAdapter(
             UObject(VELOCITY_VECTOR to Positioning(3.0, 2.0))
         )
-        TurnCommand(spaceShip2, Rotation(45.0, X)).execute(cmdCtx)
+        RotateCommand(spaceShip2, Rotation(45.0, X)).execute(cmdCtx)
         assertEquals(Positioning(-2.5980762, 0.0, -1.5), spaceShip1.velocity)
     }
 
@@ -58,7 +58,7 @@ class MovableTest {
         val spaceShip = MovableAdapter(
             UObject(POSITION to Positioning(12.0, 5.0))
         )
-        assertThrows<IllegalStateException> { TurnCommand(spaceShip, Rotation(30.0, Y)).execute(cmdCtx) }.let { ex ->
+        assertThrows<IllegalStateException> { RotateCommand(spaceShip, Rotation(30.0, Y)).execute(cmdCtx) }.let { ex ->
             assertEquals("Can't turn: velocity is not defined", ex.message)
         }
     }
@@ -68,7 +68,7 @@ class MovableTest {
         val spaceShip = MovableAdapter(
             UObject(VELOCITY_VECTOR to Positioning(12.0, 5.0))
         )
-        assertThrows<IllegalStateException> { TurnCommand(spaceShip, null).execute(cmdCtx) }.let { ex ->
+        assertThrows<IllegalStateException> { RotateCommand(spaceShip, null).execute(cmdCtx) }.let { ex ->
             assertEquals("Can't turn: rotation is not defined", ex.message)
         }
     }
