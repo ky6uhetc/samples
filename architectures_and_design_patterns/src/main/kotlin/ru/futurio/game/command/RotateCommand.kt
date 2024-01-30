@@ -1,17 +1,17 @@
-package ru.futurio.command
+package ru.futurio.game.command
 
-import ru.futurio.model.Axis.*
-import ru.futurio.model.Positioning
-import ru.futurio.model.Rotatable
-import ru.futurio.model.Rotation
-import java.math.BigDecimal
-import java.math.RoundingMode.HALF_UP
+import ru.futurio.game.model.Axis.*
+import ru.futurio.game.model.Positioning
+import ru.futurio.game.model.Rotation
+import ru.futurio.game.model.ability.Movable
+import ru.futurio.game.util.MovementUtil.cos
+import ru.futurio.game.util.MovementUtil.sin
 
 class RotateCommand(
-    override val subject: Rotatable,
+    override val subject: Movable,
     private val rotation: Rotation?
-) : ActionCommand<Rotatable> {
-    override fun execute() {
+) : Command<Movable> {
+    override fun execute(context: CommandContext) {
         subject.velocity = checkNotNull(subject.velocity) {
             "Can't rotate: velocity is not defined"
         }.let { v ->
@@ -35,10 +35,4 @@ class RotateCommand(
             }
         }
     }
-    
-    private fun cos(degrees: Double): Double = Math.cos(Math.toRadians(degrees)).round()
-    
-    private fun sin(degrees: Double): Double = Math.sin(Math.toRadians(degrees)).round()
-
-    private fun Double.round() = BigDecimal.valueOf(this).setScale(8, HALF_UP).toDouble()
 }

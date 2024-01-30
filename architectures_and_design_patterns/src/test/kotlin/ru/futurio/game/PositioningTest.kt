@@ -1,7 +1,7 @@
-package ru.futurio
+package ru.futurio.game
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import ru.futurio.model.Positioning
+import ru.futurio.game.model.Positioning
 import org.junit.jupiter.api.Test
 
 

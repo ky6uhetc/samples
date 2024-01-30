@@ -1,36 +1,39 @@
-package ru.futurio
+package ru.futurio.game
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import ru.futurio.command.RotateCommand
-import ru.futurio.model.Axis.*
-import ru.futurio.model.Positioning
-import ru.futurio.model.Rotation
+import ru.futurio.game.command.RotateCommand
+import ru.futurio.game.model.Axis.*
+import ru.futurio.game.model.Positioning
+import ru.futurio.game.model.Rotation
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.*
-import ru.futurio.model.Rotatable
+import ru.futurio.game.command.CommandContext
+import ru.futurio.game.model.ability.Movable
 
 
 class RotateTest {
 
+    private val context = mock<CommandContext> { }
+
     @Test
     fun `rotate with different axis`() {
-        val rotatable = mock<Rotatable> {
+        val movable = mock<Movable> {
             whenever(it.velocity).thenAnswer { Positioning(-3.0, 0.0, 1.0) }
         }
 
-        RotateCommand(rotatable, Rotation(90.0, Z)).execute()
-        RotateCommand(rotatable, Rotation(60.0, Z)).execute()
-        RotateCommand(rotatable, Rotation(30.0, Z)).execute()
-        RotateCommand(rotatable, Rotation(90.0, Y)).execute()
-        RotateCommand(rotatable, Rotation(60.0, Y)).execute()
-        RotateCommand(rotatable, Rotation(30.0, Y)).execute()
-        RotateCommand(rotatable, Rotation(90.0, X)).execute()
-        RotateCommand(rotatable, Rotation(60.0, X)).execute()
-        RotateCommand(rotatable, Rotation(30.0, X)).execute()
+        RotateCommand(movable, Rotation(90.0, Z)).execute(context)
+        RotateCommand(movable, Rotation(60.0, Z)).execute(context)
+        RotateCommand(movable, Rotation(30.0, Z)).execute(context)
+        RotateCommand(movable, Rotation(90.0, Y)).execute(context)
+        RotateCommand(movable, Rotation(60.0, Y)).execute(context)
+        RotateCommand(movable, Rotation(30.0, Y)).execute(context)
+        RotateCommand(movable, Rotation(90.0, X)).execute(context)
+        RotateCommand(movable, Rotation(60.0, X)).execute(context)
+        RotateCommand(movable, Rotation(30.0, X)).execute(context)
 
         val positionCaptor = argumentCaptor<Positioning>()
-        verify(rotatable, times(9)).velocity = positionCaptor.capture()
+        verify(movable, times(9)).velocity = positionCaptor.capture()
         assertEquals(
             listOf(
                 Positioning(-0.0, -3.0, 1.0),
@@ -49,43 +52,43 @@ class RotateTest {
 
     @Test
     fun `can't rotate object with undefined velocity`() {
-        val rotatable = mock<Rotatable> {
+        val movable = mock<Movable> {
             whenever(it.velocity).thenAnswer { null }
         }
 
-        assertThrows<IllegalStateException> { RotateCommand(rotatable, Rotation(30.0, Y)).execute() }.let { ex ->
+        assertThrows<IllegalStateException> { RotateCommand(movable, Rotation(30.0, Y)).execute(context) }.let { ex ->
             assertEquals("Can't rotate: velocity is not defined", ex.message)
         }
 
         val positionCaptor = argumentCaptor<Positioning>()
-        verify(rotatable, times(0)).velocity = positionCaptor.capture()
+        verify(movable, times(0)).velocity = positionCaptor.capture()
     }
 
     @Test
     fun `can't rotate object with erroneous velocity`() {
-        val rotatable = mock<Rotatable> {
+        val movable = mock<Movable> {
             whenever(it.velocity).thenThrow(RuntimeException("unknown error"))
         }
 
-        assertThrows<RuntimeException> { RotateCommand(rotatable, Rotation(30.0, Y)).execute() }.let { ex ->
+        assertThrows<RuntimeException> { RotateCommand(movable, Rotation(30.0, Y)).execute(context) }.let { ex ->
             assertEquals("unknown error", ex.message)
         }
 
         val positionCaptor = argumentCaptor<Positioning>()
-        verify(rotatable, times(0)).velocity = positionCaptor.capture()
+        verify(movable, times(0)).velocity = positionCaptor.capture()
     }
 
     @Test
     fun `can't rotate object with undefined rotation`() {
-        val rotatable = mock<Rotatable> {
+        val movable = mock<Movable> {
             whenever(it.velocity).thenAnswer { Positioning(-3.0, 0.0, 1.0) }
         }
 
-        assertThrows<IllegalStateException> { RotateCommand(rotatable, null).execute() }.let { ex ->
+        assertThrows<IllegalStateException> { RotateCommand(movable, null).execute(context) }.let { ex ->
             assertEquals("Can't rotate: rotation is not defined", ex.message)
         }
 
         val positionCaptor = argumentCaptor<Positioning>()
-        verify(rotatable, times(0)).velocity = positionCaptor.capture()
+        verify(movable, times(0)).velocity = positionCaptor.capture()
     }
 }

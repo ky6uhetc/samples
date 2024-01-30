@@ -1,4 +1,4 @@
-package ru.futurio.model
+package ru.futurio.game.model
 
 data class Positioning(
     val x: Double,
