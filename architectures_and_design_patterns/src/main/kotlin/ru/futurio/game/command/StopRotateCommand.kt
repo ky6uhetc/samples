@@ -14,8 +14,12 @@ class StopRotateCommand(
         }
         checkNotNull(subject.commandQueue) {
             "Command queue is not defined for stop rotate command"
-        }.removeIf {
-            (it as? RotateCommand)?.subject?.id == subject.manipulatedObjectId
+        }.filter {
+            it is BridgedCommand && it.command.let { cmd -> cmd is RotateCommand && cmd.subject.id == manipulatedObject.id }
+        }.forEach {
+            (it as BridgedCommand).let { bridgedCommand ->
+                bridgedCommand.inject(NoOpCommand((bridgedCommand.command as RotateCommand).subject))
+            }
         }
         SetMovingCommand(MovableAdapter(manipulatedObject), null).execute(context)
     }

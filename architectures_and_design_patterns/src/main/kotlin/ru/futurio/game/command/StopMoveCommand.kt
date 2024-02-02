@@ -1,5 +1,6 @@
 package ru.futurio.game.command
 
+import ru.futurio.game.model.ability.Moving
 import ru.futurio.game.model.ability.impl.MovableAdapter
 import ru.futurio.game.model.manipulation.MoveCommandEndable
 
@@ -14,8 +15,14 @@ class StopMoveCommand(
         }
         checkNotNull(subject.commandQueue) {
             "Command queue is not defined for stop move command"
-        }.removeIf {
-            (it as? MoveCommand)?.subject?.id == subject.manipulatedObjectId
+        }.filter {
+            it is BridgedCommand && it.command.let { cmd -> cmd is MoveCommand && cmd.subject.id == manipulatedObject.id }
+        }.forEach {
+            (it as BridgedCommand).let { bridgedCommand ->
+                bridgedCommand.inject(
+                    NoOpCommand((bridgedCommand.command as MoveCommand).subject)
+                )
+            }
         }
         SetMovingCommand(MovableAdapter(manipulatedObject), null).execute(context)
     }

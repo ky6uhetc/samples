@@ -10,7 +10,7 @@ import ru.futurio.game.util.MovementUtil.sin
 class RotateCommand(
     override val subject: Movable,
     private val rotation: Rotation?
-) : Command<Movable> {
+) : InternalCommand<Movable> {
     override fun execute(context: CommandContext) {
         subject.velocity = checkNotNull(subject.velocity) {
             "Can't rotate: velocity is not defined"

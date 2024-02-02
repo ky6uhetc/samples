@@ -1,14 +1,14 @@
 package ru.futurio.game
 
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import ru.futurio.game.command.CommandContext
-import ru.futurio.game.command.RotateCommand
-import ru.futurio.game.command.StopRotateCommand
+import ru.futurio.game.command.*
 import ru.futurio.game.model.Axis.Z
 import ru.futurio.game.model.Direction
 import ru.futurio.game.model.Positioning
@@ -18,7 +18,6 @@ import ru.futurio.game.model.UObjectProperty.*
 import ru.futurio.game.model.ability.impl.MovableAdapter
 import ru.futurio.game.model.manipulation.impl.RotateCommandEndableAdapter
 import java.util.concurrent.LinkedBlockingDeque
-import kotlin.test.assertEquals
 
 class StopRotateTest {
 
@@ -40,7 +39,7 @@ class StopRotateTest {
         ).also { objMap[it.id] = it }
 
         val commandQueue = LinkedBlockingDeque<Any>().also {
-            it.add(RotateCommand(MovableAdapter(spaceShip), Rotation(30.0, Z)))
+            it.add(BridgedCommand(RotateCommand(MovableAdapter(spaceShip), Rotation(30.0, Z))))
         }
 
         val stopRotateOrder = RotateCommandEndableAdapter(
@@ -52,7 +51,8 @@ class StopRotateTest {
 
         StopRotateCommand(stopRotateOrder).execute(cmdCtx)
 
-        assertEquals(0, commandQueue.size)
+        assertEquals(1, commandQueue.size)
+        assertTrue((commandQueue.first as BridgedCommand<*>).command is NoOpCommand)
     }
 
     @Test
@@ -63,7 +63,7 @@ class StopRotateTest {
         ).also { objMap[it.id] = it }
 
         val commandQueue = LinkedBlockingDeque<Any>().also {
-            it.add(RotateCommand(MovableAdapter(spaceShip), Rotation(30.0, Z)))
+            it.add(BridgedCommand(RotateCommand(MovableAdapter(spaceShip), Rotation(30.0, Z))))
         }
 
         val stopRotateOrder = RotateCommandEndableAdapter(
@@ -79,6 +79,7 @@ class StopRotateTest {
             assertEquals("Manipulated object ID is not defined for stop rotate command", it.message)
         }
         assertEquals(1, commandQueue.size)
+        assertTrue((commandQueue.first as BridgedCommand<*>).command is RotateCommand)
     }
 
     @Test
@@ -107,6 +108,7 @@ class StopRotateTest {
             assertEquals("Manipulated object not found by ID", it.message)
         }
         assertEquals(1, commandQueue.size)
+        assertTrue((commandQueue.first as BridgedCommand<*>).command is RotateCommand)
     }
 
     @Test
@@ -133,6 +135,7 @@ class StopRotateTest {
             assertEquals("Command queue is not defined for stop rotate command", it.message)
         }
         assertEquals(1, commandQueue.size)
+        assertTrue((commandQueue.first as BridgedCommand<*>).command is RotateCommand)
     }
 
     @Test
@@ -163,5 +166,6 @@ class StopRotateTest {
             StopRotateCommand(stopRotateOrder).execute(cmdCtx)
         }
         assertEquals(1, commandQueue.size)
+        assertTrue((commandQueue.first as BridgedCommand<*>).command is RotateCommand)
     }
 }
