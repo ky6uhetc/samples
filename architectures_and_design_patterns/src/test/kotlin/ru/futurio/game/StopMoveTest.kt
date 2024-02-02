@@ -7,10 +7,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import ru.futurio.game.command.CommandContext
-import ru.futurio.game.command.MoveCommand
-import ru.futurio.game.command.RotateCommand
-import ru.futurio.game.command.StopMoveCommand
+import ru.futurio.game.command.*
 import ru.futurio.game.model.Axis
 import ru.futurio.game.model.Positioning
 import ru.futurio.game.model.Rotation
@@ -42,7 +39,7 @@ class StopMoveTest {
         ).also { objMap[it.id] = it }
 
         val commandQueue = LinkedBlockingDeque<Any>().also {
-            it.add(MoveCommand(MovingAdapter(spaceShip)))
+            it.add(BridgedCommand(MoveCommand(MovingAdapter(spaceShip))))
         }
 
         val stopMoveOrder = MoveCommandEndableAdapter(
@@ -69,7 +66,7 @@ class StopMoveTest {
         ).also { objMap[it.id] = it }
 
         val commandQueue = LinkedBlockingDeque<Any>().also {
-            it.add(MoveCommand(MovingAdapter(spaceShip)))
+            it.add(BridgedCommand(MoveCommand(MovingAdapter(spaceShip))))
         }
 
         val stopMoveOrder = MoveCommandEndableAdapter(
@@ -94,7 +91,7 @@ class StopMoveTest {
         ).also { objMap[it.id] = it }
 
         val commandQueue = LinkedBlockingDeque<Any>().also {
-            it.add(MoveCommand(MovingAdapter(spaceShip)))
+            it.add(BridgedCommand(MoveCommand(MovingAdapter(spaceShip))))
         }
 
         val stopMoveOrder = MoveCommandEndableAdapter(
@@ -120,7 +117,7 @@ class StopMoveTest {
         ).also { objMap[it.id] = it }
 
         val commandQueue = LinkedBlockingDeque<Any>().also {
-            it.add(MoveCommand(MovingAdapter(spaceShip)))
+            it.add(BridgedCommand(MoveCommand(MovingAdapter(spaceShip))))
         }
 
         val stopMoveOrder = MoveCommandEndableAdapter(
@@ -151,8 +148,8 @@ class StopMoveTest {
         ).also { objMap[it.id] = it }
 
         val commandQueue = LinkedBlockingDeque<Any>().also {
-            it.add(MoveCommand(MovingAdapter(spaceShip1)))
-            it.add(RotateCommand(MovableAdapter(spaceShip2), Rotation(90.0, Axis.Z)))
+            it.add(BridgedCommand(MoveCommand(MovingAdapter(spaceShip1))))
+            it.add(BridgedCommand(RotateCommand(MovableAdapter(spaceShip2), Rotation(90.0, Axis.Z))))
         }
         val stopMoveOrder = MoveCommandEndableAdapter(
             UObject(

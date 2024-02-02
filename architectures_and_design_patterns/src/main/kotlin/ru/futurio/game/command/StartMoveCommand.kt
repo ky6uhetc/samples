@@ -32,7 +32,9 @@ class StartMoveCommand(
             "Command queue is not defined for start move command"
         }.let { queue ->
             SetMovingCommand(MovableAdapter(manipulatedObject), velocity).execute(context)
-            queue.add(MoveCommand(MovingAdapter(manipulatedObject)))
+            queue.add(
+                BridgedCommand(MoveCommand(MovingAdapter(manipulatedObject)))
+            )
         }
     }
 }

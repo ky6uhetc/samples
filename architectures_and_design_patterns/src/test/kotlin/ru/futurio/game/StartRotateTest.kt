@@ -5,12 +5,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import ru.futurio.game.command.Command
-import ru.futurio.game.command.CommandContext
-import ru.futurio.game.command.RotateCommand
-import ru.futurio.game.command.StartRotateCommand
+import ru.futurio.game.command.*
 import ru.futurio.game.model.*
 import ru.futurio.game.model.UObjectProperty.*
+import ru.futurio.game.model.ability.Movable
 import ru.futurio.game.model.ability.impl.MovingAdapter
 import ru.futurio.game.model.manipulation.impl.RotateCommandStartableAdapter
 import java.util.concurrent.LinkedBlockingDeque
@@ -48,7 +46,7 @@ class StartRotateTest {
         assertEquals(Positioning(2.0, 0.0, 0.0), spaceShipMoving.velocity)
 
         assertEquals(1, commandQueue.size)
-        (commandQueue.pop() as RotateCommand).let {
+        (commandQueue.pop() as BridgedCommand<Movable>).let {
             assertEquals(spaceShip.id, it.subject.id)
             it.execute(cmdCtx)
         }
