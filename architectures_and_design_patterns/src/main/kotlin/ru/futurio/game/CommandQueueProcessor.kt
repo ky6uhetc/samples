@@ -2,13 +2,13 @@ package ru.futurio.game
 
 import ru.futurio.game.command.Command
 import ru.futurio.game.command.CommandContext
-import java.util.concurrent.LinkedBlockingQueue
+import java.util.*
 
 class CommandQueueProcessor(
     private val commandErrorProcessor: CommandErrorProcessor
 ) {
 
-    fun process(commandContext: CommandContext, commandQueue: LinkedBlockingQueue<Command<*>?>) {
+    fun process(commandContext: CommandContext, commandQueue: Queue<Command<*>>) {
         var interrupted = false
         while (commandQueue.isNotEmpty() && interrupted.not()) {
             commandQueue.poll()?.also { command ->
@@ -18,7 +18,7 @@ class CommandQueueProcessor(
                     if (ex is InterruptedException) {
                         interrupted = true
                     }
-                    commandErrorProcessor.handle(ex, command)
+                    commandErrorProcessor.processError(ex, command, commandQueue)
                 }
             }
         }

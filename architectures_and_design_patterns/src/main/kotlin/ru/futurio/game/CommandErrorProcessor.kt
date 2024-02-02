@@ -1,7 +1,8 @@
 package ru.futurio.game
 
 import ru.futurio.game.command.Command
+import java.util.*
 
 interface CommandErrorProcessor {
-    fun handle(exception: Exception, command: Command<*>)
+    fun processError(exception: Exception, command: Command<*>, commandQueue: Queue<Command<*>>)
 }

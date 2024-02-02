@@ -1,5 +1,6 @@
 package ru.futurio.game
 
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.*
@@ -12,13 +13,16 @@ class LogErrorTest {
     @Test
     fun `log command happy path`() {
         val logger = mock<Consumer<String>> { }
-        val command = LogErrorCommand(IllegalArgumentException("wrong value"), logger)
+        val command = LogErrorCommand(IllegalArgumentException("wrong value"), mock {}, logger)
 
         command.execute(mock { })
 
         val stringCaptor = argumentCaptor<String>()
         verify(logger, times(1)).accept(stringCaptor.capture())
-        assertEquals("Error occurred: wrong value", stringCaptor.firstValue)
+        stringCaptor.firstValue.also {
+            assertTrue(it.startsWith("Error occurred while executing Command${'$'}"))
+            assertTrue(it.endsWith(": wrong value"))
+        }
     }
 
     @Test
@@ -26,7 +30,7 @@ class LogErrorTest {
         val logger = mock<Consumer<String>> {
             whenever(it.accept(any())).thenThrow(RuntimeException("unexpected error"))
         }
-        val command = LogErrorCommand(IllegalArgumentException("wrong value"), logger)
+        val command = LogErrorCommand(IllegalArgumentException("wrong value"), mock { }, logger)
 
         assertThrows<RuntimeException> {
             command.execute(mock { })

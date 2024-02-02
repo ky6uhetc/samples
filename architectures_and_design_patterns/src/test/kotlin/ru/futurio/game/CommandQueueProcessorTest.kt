@@ -4,9 +4,11 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.*
 import ru.futurio.game.command.Command
 import ru.futurio.game.command.CommandContext
+import java.util.Queue
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.LinkedBlockingQueue
 import kotlin.concurrent.thread
@@ -20,7 +22,7 @@ class CommandQueueProcessorTest {
     @Test
     fun `happy path`() {
         val commandsList = List<Command<*>>(3) { mock { } }
-        val commandQueue = LinkedBlockingQueue<Command<*>?>().also { q -> q.addAll(commandsList) }
+        val commandQueue = LinkedBlockingQueue<Command<*>>().also { q -> q.addAll(commandsList) }
 
         commandQueueProcessor.process(commandContext, commandQueue)
 
@@ -35,7 +37,9 @@ class CommandQueueProcessorTest {
             mock { whenever(it.execute(any())).thenThrow(RuntimeException("something went wrong")) },
             mock { }
         )
-        val commandQueue = LinkedBlockingQueue<Command<*>?>().also { q -> q.addAll(commandsList) }
+        val commandQueue = LinkedBlockingQueue<Command<*>>().also { q ->
+            q.addAll(commandsList)
+        }
 
         assertDoesNotThrow {
             commandQueueProcessor.process(commandContext, commandQueue)
@@ -45,9 +49,12 @@ class CommandQueueProcessorTest {
         commandsList.forEach { command -> verify(command, times(1)).execute(commandContext) }
         val exceptionCaptor = argumentCaptor<Exception>()
         val commandCaptor = argumentCaptor<Command<*>>()
-        verify(commandErrorProcessor, times(1)).handle(exceptionCaptor.capture(), commandCaptor.capture())
+        val queueCaptor = argumentCaptor<Queue<Command<*>>>()
+        verify(commandErrorProcessor, times(1))
+            .processError(exceptionCaptor.capture(), commandCaptor.capture(), queueCaptor.capture())
         assertInstanceOf(RuntimeException::class.java, exceptionCaptor.firstValue)
-        verifyNoMoreInteractions(commandErrorProcessor)
+        assertEquals(commandsList[0], commandCaptor.firstValue)
+        assertEquals(commandQueue, queueCaptor.firstValue)
     }
 
     @Test
@@ -59,7 +66,9 @@ class CommandQueueProcessorTest {
             mock { whenever(it.execute(any())).then { countDownLatch1.countDown(); countDownLatch2.await() } },
             mock { }
         )
-        val commandQueue = LinkedBlockingQueue<Command<*>?>().also { q -> q.addAll(commandsList) }
+        val commandQueue = LinkedBlockingQueue<Command<*>>().also { q ->
+            q.addAll(commandsList)
+        }
 
         val commandProcessorThread = thread {
             commandQueueProcessor.process(commandContext, commandQueue)
@@ -74,7 +83,33 @@ class CommandQueueProcessorTest {
         verifyNoInteractions(commandsList[1])
 
         val exceptionCaptor = argumentCaptor<Exception>()
-        verify(commandErrorProcessor, times(1)).handle(exceptionCaptor.capture(), any())
+        val queueCaptor = argumentCaptor<Queue<Command<*>>>()
+        verify(commandErrorProcessor, times(1)).processError(exceptionCaptor.capture(), any(), queueCaptor.capture())
         assertInstanceOf(InterruptedException::class.java, exceptionCaptor.firstValue)
+        assertEquals(commandQueue, queueCaptor.firstValue)
+    }
+
+    @Test
+    fun `can't process command error`() {
+        val commandsList = listOf<Command<*>>(
+            mock { whenever(it.execute(any())).thenThrow(RuntimeException("something went wrong")) },
+            mock { }
+        )
+        val commandQueue = LinkedBlockingQueue<Command<*>>().also { q ->
+            q.addAll(commandsList)
+        }
+        whenever(commandErrorProcessor.processError(any(), any(), any()))
+            .thenThrow(IllegalStateException("can't process command error"))
+
+        assertThrows<IllegalStateException> {
+            commandQueueProcessor.process(commandContext, commandQueue)
+        }.also {
+            assertEquals("can't process command error", it.message)
+        }
+
+        assertEquals(1, commandQueue.size)
+        verify(commandsList[0], times(1)).execute(commandContext)
+        verifyNoInteractions(commandsList[1])
+        verify(commandErrorProcessor, times(1)).processError(any(), any(), any())
     }
 }
